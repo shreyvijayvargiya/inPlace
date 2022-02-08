@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import LoginScreen from './screens/LoginScreen';
+import { LocationScreen, LoginScreen } from './screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -10,7 +10,8 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Locations">
+        <Stack.Screen name="Locations" component={LocationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>

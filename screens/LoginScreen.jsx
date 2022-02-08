@@ -2,15 +2,16 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Login } from '../components'
+import Body from '../modules/Layout/Body';
 
 const LoginScreen = () => {
     return (
-        <View style={styles.container}>
+        <Body>
             <View style={styles.statusBar}>
             <StatusBar style="dark" />
             </View>
             <Login />
-        </View>
+        </Body>
     )
 }
 export default LoginScreen;
