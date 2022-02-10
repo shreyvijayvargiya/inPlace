@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { LocationScreen, LoginScreen } from './screens';
+import { LocationScreen, LoginScreen, CameraScreen } from './screens';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -11,8 +11,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Locations">
-        <Stack.Screen name="Locations" component={LocationScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Locations" component={LocationScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Camera" component={CameraScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
