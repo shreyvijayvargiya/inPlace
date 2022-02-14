@@ -14,7 +14,8 @@ export const loginApi = async(navigation, location ) => {
     // } else {
     //     return { cancelled: true };
     // }
-    console.log(location, 'location');
-    store.dispatch({ type: SET_USER_META_DATA, payload: { userLocation: location  }});
-    // navigation.navigate("Locations")
+    if(location){
+        store.dispatch({ type: SET_USER_META_DATA, payload: { userLocation: location?.coords  }});
+        navigation.navigate("Locations")
+    }
 }

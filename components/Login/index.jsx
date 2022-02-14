@@ -6,6 +6,7 @@ import { Paragraph, Message } from '../../modules/UI/Text';
 import app from '../../modules/Firebase/firebase';
 import { loginApi } from '../../modules/Api/login'
 import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
+import { useIsFocused } from '@react-navigation/core';
 
 const Login = ({ navigation }) => {
 
@@ -15,12 +16,14 @@ const Login = ({ navigation }) => {
     });
 
     const getUserLocation = async() => {
-        const { location, error, loading } = await fetchUserLocation();
-        setData({ loading: false, location })
+        const data = await fetchUserLocation();
+        setData({ location: data.data, loading: false })
     };
+    
     useEffect(() => {
         getUserLocation()
-    }, [ ]);
+    }, [ useIsFocused() ]);
+
     
     return (
         <View style={styles.container}>
