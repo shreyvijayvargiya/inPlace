@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Dimensions, Image } from 'react-native';
 import { useTheme } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Paragraph, Message } from '../../modules/UI/Text';
 import app from '../../modules/Firebase/firebase';
-import { loginApi } from '../../modules/api/login';
+import { loginApi } from '../../modules/Api/login'
+import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
 
-const Login = () => {
+const Login = ({ navigation }) => {
+
+    const [ data, setData ] = useState({
+        location: null,
+        loading: true
+    });
+
+    const getUserLocation = async() => {
+        const { location, error, loading } = await fetchUserLocation();
+        setData({ loading: false, location })
+    };
+    useEffect(() => {
+        getUserLocation()
+    }, [ ]);
     
     return (
         <View style={styles.container}>
@@ -18,10 +32,10 @@ const Login = () => {
                     `Leave the mainstream behind and explore the places that your friends, influencers and travellers are exploring`
                 } />
                 <Button  
-                    title="Login To Continue"
+                    title="Guest Login To Continue"
                     containerStyle={styles.loginButton}
                     titleStyle={{ color: 'black' }}
-                    onPress={loginApi}
+                    onPress={() => loginApi(navigation, data.location )}
                 />
             </View>
         </View>

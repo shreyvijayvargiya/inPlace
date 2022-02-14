@@ -5,6 +5,7 @@ import { Camera } from 'expo-camera';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import _ from 'lodash';
+import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
 
 const CameraComponent = ({ navigation }) => {
 
@@ -14,8 +15,8 @@ const CameraComponent = ({ navigation }) => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [ images, setImages ] = useState([]);
   let cameraRef;
-
-  useEffect(() => {
+  
+  useEffect(async() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -38,6 +39,8 @@ const CameraComponent = ({ navigation }) => {
       setImages(imagesData)
     }
   };
+
+  
 
   const submitPictures = () => {
     // set all images in redux and move to the bottom drawer 

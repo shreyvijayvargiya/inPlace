@@ -4,13 +4,13 @@ import { StatusBar } from 'expo-status-bar';
 import { Login } from '../components'
 import Body from '../modules/Layout/Body';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     return (
         <Body>
             <View style={styles.statusBar}>
             <StatusBar style="dark" />
             </View>
-            <Login />
+            <Login navigation={navigation} />
         </Body>
     )
 }

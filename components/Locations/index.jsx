@@ -4,21 +4,32 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import Body from '../../modules/Layout/Body';
 import { Icon } from 'react-native-elements';
+import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const Locations = ({ navigation }) => {
     
+    const [ locations, setLocations ] = useState({
+        loading: true,
+        data: true 
+    });
+    const { userMetaData } = useSelector(state => state.userReducer)
+
     const [ region, setRegion ] = useState({
         latitude: 20.5937,
         longitude: 78.9629,
-        latitudeDelta: 0.015,
-        longitudeDelta: 0.0121
+        latitudeDelta: 0.0015,
+        longitudeDelta: 0.00121
     });
 
     const openCameraScreen = () => {
+        
         navigation?.navigate('Camera')
     };
 
 
+    console.log(userMetaData, 'userMetaData')
     return (
         <Body>
             <MapView
