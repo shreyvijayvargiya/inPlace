@@ -1,7 +1,8 @@
 import {
     SET_USER,
     REMOVE_USER,
-    SET_USER_META_DATA
+    SET_USER_META_DATA,
+    MARKERS_LOCATIONS
 } from "../constants";
   
 export const setUserInStore = (payload) => {
@@ -20,3 +21,8 @@ export const setUserMetaData = (payload) => {
         dispatch({ type: SET_USER_META_DATA, payload })
     }
 }
+export const addMarkersLocation = payload => {
+    return async dispatch => {
+        dispatch({ type: MARKERS_LOCATIONS, payload })
+    }
+};

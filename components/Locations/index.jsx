@@ -1,35 +1,49 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import Body from '../../modules/Layout/Body';
 import { Icon } from 'react-native-elements';
-import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { fetchLocations } from '../../modules/Api/locationsApi';
+import { useIsFocused, useFocusEffect } from '@react-navigation/core';
+import MarkerComponent from './MarkerComponent';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import LocationDetails from './LocationDetails';
+
 
 const Locations = ({ navigation }) => {
     
+    const { userMetaData, markersLocation } = useSelector(state => state.userReducer)
     const [ locations, setLocations ] = useState({
         loading: true,
-        data: true 
+        data: markersLocation 
     });
-    const { userMetaData } = useSelector(state => state.userReducer)
+    const [activeLocation, setActiveLocation] = useState(null);
+    let bottomSheetRef;
 
     const [ region, setRegion ] = useState({
-        latitude: 20.5937,
-        longitude: 78.9629,
-        latitudeDelta: 0.0015,
-        longitudeDelta: 0.00121
+        latitude: userMetaData.userLocation.latitude,
+        longitude: userMetaData.userLocation.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
     });
 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchLocations()
+        }, [ userMetaData ])
+    );
+
     const openCameraScreen = () => {
-        
         navigation?.navigate('Camera')
     };
+    
+    const showLocationDetails = (coords) => {
+        bottomSheetRef.open();
+        setActiveLocation(coords);
+    };
 
-
-    console.log(userMetaData, 'userMetaData')
     return (
         <Body>
             <MapView
@@ -49,8 +63,13 @@ const Locations = ({ navigation }) => {
                 }}
                 userInterfaceStyle="dark"
                 style={styles.map}
-                showsUserLocation
-            />
+                
+            >
+                {locations.data && Object.keys(locations.data).map(item => {
+                    const coords = locations.data[item].locationCoords;
+                    return <MarkerComponent key={item} markerId={item} coords={coords} showLocationDetails={() => showLocationDetails(coords)} />
+                })}
+            </MapView>
             <View style={styles.addMarkerButtonContainer}>
                 <TouchableOpacity style={styles.addMarkerButton} onPress={openCameraScreen}>
                     <Icon 
@@ -60,6 +79,23 @@ const Locations = ({ navigation }) => {
                     />
                 </TouchableOpacity>
             </View>
+            <RBSheet
+                ref={ref => {
+                    bottomSheetRef = ref;
+                }}
+                height={500}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderTopLeftRadius: 50,
+                        borderTopRightRadius: 50,
+                    }
+                }}
+            >
+                <LocationDetails activeLocation={activeLocation} />
+            </RBSheet>
         </Body>
     );
 };

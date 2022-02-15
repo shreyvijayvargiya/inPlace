@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import _ from 'lodash';
 import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
+import AddLocation from './AddLocation';
+import RBSheet from "react-native-raw-bottom-sheet";
+import ImagePicker from 'expo-image-picker'; 
 
 const CameraComponent = ({ navigation }) => {
 
@@ -13,8 +16,9 @@ const CameraComponent = ({ navigation }) => {
   
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [ images, setImages ] = useState([]);
+  const [images, setImages] = useState([]);
   let cameraRef;
+  let bottomSheetRef;
   
   useEffect(async() => {
     (async () => {
@@ -33,18 +37,16 @@ const CameraComponent = ({ navigation }) => {
   const clickPictures = async() => {
     let imagesData = [...images]
     if(cameraRef){
-      const snap = await cameraRef.takePictureAsync();
+      const snap = await cameraRef.takePictureAsync({ base64: true });
       const id = uuidv4();
-      imagesData.push({ id, width: snap.width, height: snap.height, uri: snap.uri, base64: snap.base64  });
+      imagesData.push({ id: id, uri: snap.uri, base64: snap.base64 });
       setImages(imagesData)
     }
   };
 
-  
 
   const submitPictures = () => {
-    // set all images in redux and move to the bottom drawer 
-    // navigation.navigate("Locations")
+    bottomSheetRef.open()
   };
 
   const removePicture = (id) => {
@@ -88,6 +90,23 @@ const CameraComponent = ({ navigation }) => {
           </View>}
         </View>
       </View>
+      <RBSheet
+        ref={ref => {
+          bottomSheetRef = ref;
+        }}
+        height={500}
+        openDuration={250}
+        customStyles={{
+          container: {
+            justifyContent: "center",
+            alignItems: "center",
+            borderTopLeftRadius: 50,
+            borderTopRightRadius: 50,
+          }
+          }}
+        >
+          <AddLocation images={images} removePicture={() => removePicture(item.id)} navigation={navigation} />
+        </RBSheet>
     </View>
   );
 };

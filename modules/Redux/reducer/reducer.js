@@ -3,6 +3,7 @@ import {
     SET_USER,
     REMOVE_USER,
     SET_USER_META_DATA,
+    MARKERS_LOCATIONS,
 } from "../constants";
 
 const initialState = {
@@ -16,7 +17,8 @@ const initialState = {
     isUserLoggedIn: false,
     userMetaData: {
         userLocation: null
-    }
+    },
+    markersLocation: null
 }
 export const userReducer = (state = initialState, action) => {
     switch(action.type){
@@ -38,6 +40,12 @@ export const userReducer = (state = initialState, action) => {
                 userMetaData: {
                     userLocation: action.payload.userLocation
                 }
+            }
+        }
+        case MARKERS_LOCATIONS: {
+            return {
+                ...state,
+                markersLocation: action.payload
             }
         }
         default:

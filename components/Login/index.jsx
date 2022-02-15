@@ -3,28 +3,17 @@ import { StyleSheet, Text, View, ImageBackground, Dimensions, Image } from 'reac
 import { useTheme } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import { Paragraph, Message } from '../../modules/UI/Text';
-import app from '../../modules/Firebase/firebase';
 import { loginApi } from '../../modules/Api/login'
-import { fetchUserLocation } from '../../modules/Hooks/fetchUserLocation';
-import { useIsFocused } from '@react-navigation/core';
+import { fetchLocations } from '../../modules/Api/locationsApi';
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation, data }) => {
 
-    const [ data, setData ] = useState({
-        location: null,
-        loading: true
-    });
-
-    const getUserLocation = async() => {
-        const data = await fetchUserLocation();
-        setData({ location: data.data, loading: false })
+    const handleLogin = () => {
+        fetchLocations();
+        loginApi(navigation, data.location );
     };
-    
-    useEffect(() => {
-        getUserLocation()
-    }, [ useIsFocused() ]);
 
-    
+
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../../assets/loginPageBackground.png')} style={styles.bgImg} />
@@ -38,7 +27,7 @@ const Login = ({ navigation }) => {
                     title="Guest Login To Continue"
                     containerStyle={styles.loginButton}
                     titleStyle={{ color: 'black' }}
-                    onPress={() => loginApi(navigation, data.location )}
+                    onPress={handleLogin}
                 />
             </View>
         </View>
